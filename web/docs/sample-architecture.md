@@ -114,7 +114,7 @@ graph TD
 
 ```mermaid
 graph LR
-    DEV[Developer] -->|add V{n}__desc.sql| REPO[src/main/resources/db/migration]
+    DEV[Developer] -->|"add V{n}__desc.sql"| REPO[src/main/resources/db/migration]
     REPO -->|app startup| FW[Flyway]
     FW -->|check flyway_schema_history| DB[(PostgreSQL)]
     FW -->|apply pending| DB
