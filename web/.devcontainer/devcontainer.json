@@ -1,0 +1,62 @@
+{
+  "name": "Claude Code Dev",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+  // Features pinned to exact OCI digest hashes to prevent supply chain attacks.
+  // To update: check the latest digest at:
+  //   https://github.com/devcontainers/features/pkgs/container/features%2Fdocker-in-docker
+  //   https://github.com/devcontainers/features/pkgs/container/features%2Fgit
+  "features": {
+    // docker-in-docker v2.16.1
+    "ghcr.io/devcontainers/features/docker-in-docker@sha256:ce078b7bf7d9ef3bcb9813b32103795d8d72172446890b64772cbe1dec6baafd": {
+      "dockerDashComposeVersion": "v2"
+    },
+    // git v1.3.4
+    "ghcr.io/devcontainers/features/git@sha256:27905dc196c01f77d6ba8709cb82eeaf330b3b108772e2f02d1cd0d826de1251": {},
+    // Java JDK 25 LTS + Maven + Gradle
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "25",
+      "jdkDistro": "ms",
+      "installMaven": "true",
+      "installGradle": "false"
+    },
+    // Node.js v24 LTS
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    // Helm 3 + kubectl
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "helm": "latest",
+      "kubectl": "latest",
+      "minikube": "none"
+    }
+  },
+
+  // Use zsh as default shell
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
+      "extensions": [
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "bierner.markdown-mermaid"
+      ]
+    }
+  },
+
+  // Install Claude Code via the official native installer (no Node.js required)
+  // Restore .claude.json symlink before the installer runs so it doesn't warn about missing config
+  "postCreateCommand": "sudo chown -R vscode:vscode ~/.claude && if [ ! -f ~/.claude/.claude.json ]; then BACKUP=$(ls -t ~/.claude/backups/.claude.json.backup.* 2>/dev/null | head -1); [ -n \"$BACKUP\" ] && cp \"$BACKUP\" ~/.claude/.claude.json; fi; [ ! -e ~/.claude.json ] && [ -f ~/.claude/.claude.json ] && ln -s ~/.claude/.claude.json ~/.claude.json; curl -fsSL https://claude.ai/install.sh | bash",
+
+  // Persist zsh history and claude config/auth across rebuilds
+  "mounts": [
+    "source=devcontainer-zsh-history,target=/home/vscode/.zsh_history_dir,type=volume",
+    "source=devcontainer-claude-config,target=/home/vscode/.claude,type=volume"
+  ],
+
+  // Point HISTFILE at the persisted volume on every start; symlink .claude.json into the persisted ~/.claude volume
+  "postStartCommand": "sudo chown vscode:vscode ~/.zsh_history_dir && mkdir -p ~/.zsh_history_dir && touch ~/.zsh_history_dir/.zsh_history && grep -qxF 'export HISTFILE=~/.zsh_history_dir/.zsh_history' ~/.zshrc || printf '\\nexport HISTFILE=~/.zsh_history_dir/.zsh_history\\nexport HISTSIZE=10000\\nexport SAVEHIST=10000\\nsetopt APPEND_HISTORY\\nsetopt INC_APPEND_HISTORY\\nsetopt SHARE_HISTORY\\n' >> ~/.zshrc && if [ -f ~/.claude.json ] && [ ! -L ~/.claude.json ]; then mv ~/.claude.json ~/.claude/.claude.json; elif [ ! -f ~/.claude/.claude.json ]; then BACKUP=$(ls -t ~/.claude/backups/.claude.json.backup.* 2>/dev/null | head -1); [ -n \"$BACKUP\" ] && cp \"$BACKUP\" ~/.claude/.claude.json; fi && [ ! -e ~/.claude.json ] && [ -f ~/.claude/.claude.json ] && ln -s ~/.claude/.claude.json ~/.claude.json || true",
+
+  "remoteUser": "vscode"
+}
