@@ -1,0 +1,173 @@
+# ---------------------------------------------------------------------------
+# .gitignore template for the Vue 3 + Spring Boot + PostgreSQL + Flyway stack
+# described in docs/sample-architecture.md.
+#
+#
+# Assumes the project layout:
+#   frontend/   Vue 3 + Vite
+#   backend/    Spring Boot (Maven or Gradle)
+#   docker/     Dockerfiles + compose
+#   .devcontainer/
+#   docs/
+# ---------------------------------------------------------------------------
+
+
+# ===== Secrets & environment =================================================
+# Never commit real credentials. Keep a checked-in *.example file instead.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+secrets/
+
+
+# ===== Frontend: Node.js / Vue 3 / Vite ======================================
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/coverage/
+frontend/.nyc_output/
+frontend/stats.html
+
+# Vite / Vitest caches
+frontend/.vite-cache/
+frontend/.vitest-cache/
+
+# Package manager artifacts (keep the lockfile you actually use)
+frontend/.pnpm-store/
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# Debug logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+
+# ===== Backend: Java / Spring Boot ===========================================
+# Compiled class files and build output
+backend/**/*.class
+backend/**/target/
+backend/**/build/
+backend/**/out/
+backend/**/bin/
+
+# Spring Boot fat-jar / executable
+backend/**/*.jar
+backend/**/*.war
+backend/**/*.ear
+backend/**/*.nar
+
+# Maven
+backend/**/.mvn/wrapper/maven-wrapper.jar
+backend/**/dependency-reduced-pom.xml
+backend/**/.flattened-pom.xml
+
+# Gradle
+backend/**/.gradle/
+backend/**/gradle-app.setting
+backend/**/!gradle-wrapper.jar
+backend/**/!gradle-wrapper.properties
+
+# Spring Boot devtools / JVM crash logs
+backend/**/hs_err_pid*.log
+backend/**/replay_pid*.log
+backend/**/*.hprof
+
+
+# ===== Test artifacts ========================================================
+**/surefire-reports/
+**/failsafe-reports/
+**/jacoco.exec
+**/jacoco-it.exec
+**/test-results/
+**/coverage/
+
+
+# ===== Docker / Compose ======================================================
+# Local override files (compose supports these by convention)
+docker-compose.override.yml
+docker/docker-compose.override.yml
+docker/.env
+
+
+# ===== Kubernetes / Helm =====================================================
+# Packaged chart artifacts (keep chart sources)
+charts/*.tgz
+**/charts/*.tgz
+**/Chart.lock
+# Local kubeconfig accidentally dropped into the repo
+kubeconfig
+*.kubeconfig
+
+
+# ===== IDEs / editors ========================================================
+# IntelliJ IDEA / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse / STS
+.project
+.classpath
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+
+# VS Code (keep shared settings, ignore per-user state)
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.history/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+
+# ===== Operating system ======================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+
+# ===== Misc ==================================================================
+*.log
+logs/
+tmp/
+.tmp/
+*.bak
+*.swp
+*.swo
